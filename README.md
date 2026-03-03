@@ -15,6 +15,7 @@ The pipeline runs either interactively through a GUI (`App_Behavior`) or program
 ```
 .
 ├── App_Behavior.m              GUI control center for the full pipeline
+├── BehaviorSync.m              Video/neural synchronization GUI for event annotation (under construction)
 ├── Batch_Behavior_Analyse.m    Batch wrapper: loads files, runs analysis, exports Excel
 ├── Behavior_Analyse.m          Core analysis function (multi-subject, block analysis)
 ├── detect_bouts.m              Low-level bout detection from a binary signal
@@ -39,10 +40,15 @@ App_Behavior()
 ```
 
 1. Use **File > Load Data Files** to select one or more raw movement files (`.out`, `.txt`, or `.csv`).
-2. Load or manually fill the Events table (columns: Name, Onset in seconds, Offset in seconds).
-3. Set basic parameters (sampling rate, freeze threshold, minimum duration, baseline duration) and up to five block grouping definitions.
-4. Click **RUN ANALYSIS**.
-5. Use **File > Export Results** or the **Plot Viewer** panel to inspect and export results.
+2. *(Optional)* Use **Tools > Open BehaviorSync** to load the corresponding video alongside
+   neural or behavioral recordings, navigate frame by frame, and visually annotate
+   event onsets and offsets. Export the result as `<file>_events.csv` and load it
+   directly into the Events table in step 3.
+3. Load or manually fill the Events table (columns: Name, Onset in seconds, Offset in seconds).
+4. Set basic parameters (sampling rate, freeze threshold, minimum duration, baseline duration)
+   and up to five block grouping definitions.
+5. Click **RUN ANALYSIS**.
+6. Use **File > Export Results** or the **Plot Viewer** panel to inspect and export results.
 
 ### Batch Mode (Command Line)
 
@@ -218,6 +224,50 @@ Block labels follow the format `<Prefix> <first>-<last>` (e.g., `CS 1-5`, `CS 6-
 
 ---
 
+## BehaviorSync  *(under construction)*
+
+BehaviorSync is a companion GUI for visually annotating behavioral events directly
+from video, synchronized with simultaneously recorded neural or behavioral signals
+(e.g., LFP, EMG, load cell output).
+
+It is launched from within `App_Behavior` via **Tools > Open BehaviorSync**, or
+run as a standalone function:
+```matlab
+BehaviorSync()
+```
+
+### Features
+
+- Load and play video files (`.mp4`, `.avi`, `.wmv`, `.mov`).
+- Load neural and behavioral recordings (`.csv` or `.txt`; last column used as signal).
+- Time vectors are built automatically from sample count and user-supplied Fs,
+  so input files do **not** require a time column.
+- Scrolling time-window view on both signal axes, synchronized with video playback.
+- Mark Onset and Offset events frame by frame via buttons or keyboard shortcuts.
+- Export annotated events to CSV — compatible with the Events table in `App_Behavior`.
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|---|---|
+| Space | Play / Pause |
+| I | Mark Onset |
+| O | Mark Offset |
+| M | Smart toggle (Onset if balanced, Offset otherwise) |
+| ← / → | Step one frame backward / forward |
+| Del | Delete last marked event |
+
+### Output Format
+```
+# BehaviorSync export | Video: 30.0000 fps | Neural Fs: 1000 Hz | Behavior Fs: 5 Hz
+Frame (sample) onset, Frame (sample) offset, Onset (seconds), Offset (seconds), Duration (seconds)
+```
+
+> **Note:** Synchronization between signals with different recording start times
+> is not yet supported. A Time Offset field per signal is planned for a future version.
+
+---
+
 ## Author
 
 Flavio Mourao (mourao.fg@gmail.com)
@@ -227,4 +277,4 @@ Beckman Institute, University of Illinois Urbana-Champaign
 Federal University of Minas Gerais, Brazil
 
 Development started: December 2023  
-Last update: February 2026
+Last update: March 2026

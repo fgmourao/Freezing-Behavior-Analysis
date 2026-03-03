@@ -1,6 +1,6 @@
 function App_Behavior()
 %% App_Behavior
-%
+
 % DESCRIPTION
 %   Graphical User Interface (GUI) control center for the behavior analysis
 %   pipeline. Provides interactive panels for loading data, configuring
@@ -9,7 +9,7 @@ function App_Behavior()
 %
 %   All UI state is managed through a shared 'appData' struct that is
 %   accessible by all nested callback functions via closure.
-%
+
 % LAYOUT
 %   Panel 1 (top-left)   - Basic Parameters (fs, threshold, duration, baseline)
 %   Panel 2 (top-right)  - Block Analysis definitions (up to 5 prefix/size pairs)
@@ -18,30 +18,50 @@ function App_Behavior()
 %   Status bar           - Color-coded feedback label
 %   Run button           - Triggers the full analysis pipeline
 %   Menu > File          - Load data, export Excel, save .mat, save timestamps
-%
+%   Menu > Tools         - Launch BehaviorSync (Video/Neural Synchronization GUI)
+
 % WORKFLOW
 %   1. Load one or more raw data files via File menu or Run button.
 %   2. Fill or load the events table (Name, Onset_s, Offset_s).
+%      * Tip: Use Tools > Open BehaviorSync to visually extract these events from video.
 %   3. Set basic and block parameters in the panels.
 %   4. Click RUN ANALYSIS.
 %   5. Use the Plot Viewer or File menu to export results.
-%
+
 % OUTPUTS (via File menu after analysis)
 %   <file>_Results.xlsx     - Freeze metrics per epoch per subject
 %   <file>_Timestamps.xlsx  - Freeze / non-freeze onset-offset pairs
 %   Data_Results.mat        - Full data_results struct (workspace variable)
-%
+
+%   BehaviorSync Output (via Tools menu)  [under construction]
+%   <file>_events.csv       - Extracted behavioral events from video through
+%                             visual inspection, containing:
+%                             Row 1: Metadata (Video fps, Neural Fs, Behavior Fs)
+%                             Columns: Frame (sample) onset | Frame (sample) offset |
+%                                      Onset (seconds) | Offset (seconds) | Duration (seconds)
+%                             * The exported Onset/Offset times can be loaded directly into Panel 3.
+
+%   KNOWN LIMITATIONS:
+%   - If the behavioral or neural recording does not start at the same
+%     real-world time as the video, a manual Time Offset (s) field will
+%     be required for precise alignment. This feature is under development.
+
+%   NOTE: This function BehaviorSync is still under construction.
+%           Synchronization issues between signals with different start times
+%           will be addressed in future versions.
+
+
 % REQUIRES
-%   Behavior_Analyse.m, detect_bouts.m, Plot_Behavior_Batch.m
-%
+%   Behavior_Analyse.m, detect_bouts.m, Plot_Behavior_Batch.m, BehaviorSync.m
+
 % AUTHOR
 %   Flavio Mourao (mourao.fg@gmail.com)
 %   Texas A&M University - Department of Psychological and Brain Sciences
 %   University of Illinois Urbana-Champaign - Beckman Institute
 %   Federal University of Minas Gerais - Brazil
-%
-% Started:     12/2023
-% Last update: 02/2026
+
+% Started:     12 / 2023
+% Last update: 03 / 2026
 
 %%  1. Main Figure
 
@@ -66,6 +86,9 @@ mExport         = uimenu(menuFile, 'Label', '2. Export Results (.xls)',         
 mSaveMat        = uimenu(menuFile, 'Label', '3. Save Results (.mat)',            'Callback', @saveMatFile,     'Enable', 'off');
 mSaveTimestamps = uimenu(menuFile, 'Label', '4. Export freeze timestamps (.xls)',  'Callback', @saveTimestamps,  'Enable', 'off');
 
+% 2.1 Tools Menu
+menuTools = uimenu(fig, 'Label', 'Tools');
+uimenu(menuTools, 'Label', 'Open BehaviorSync (Video/Neural Sync)', 'Callback', @openBehaviorSync);
 
 %% 3. Basic Parameters Panel (top-left)
 
@@ -188,6 +211,15 @@ btnPlot = uicontrol('Parent', pnlPlot, 'Style', 'pushbutton', ...
 
 
 %% CALLBACK FUNCTIONS
+
+% openBehaviorSync  -  Launch the BehaviorSync GUI in a separate window
+    function openBehaviorSync(~, ~)
+        try
+            BehaviorSync(); % Chama o arquivo BehaviorSync.m
+        catch ME
+            errordlg(['Could not open BehaviorSync. Make sure BehaviorSync.m is in the same folder. Error: ' ME.message], 'Launch Error');
+        end
+    end
 
 % loadFiles  -  Select one or more raw data files
 
