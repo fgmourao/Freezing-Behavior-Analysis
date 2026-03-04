@@ -2,13 +2,11 @@ function App_Behavior()
 %% App_Behavior
 
 % DESCRIPTION
-%   Graphical User Interface (GUI) control center for the behavior analysis
-%   pipeline. Provides interactive panels for loading data, configuring
+%   Graphical User Interface (GUI) control center for the behavior analysis pipeline. Provides interactive panels for loading data, configuring
 %   parameters, running analysis, and exporting results — without requiring
 %   MATLAB App Designer.
 %
-%   All UI state is managed through a shared 'appData' struct that is
-%   accessible by all nested callback functions via closure.
+%   All UI state is managed through a shared 'appData' struct that is accessible by all nested callback functions via closure.
 
 % LAYOUT
 %   Panel 1 (top-left)   - Basic Parameters (fs, threshold, duration, baseline)
@@ -18,7 +16,7 @@ function App_Behavior()
 %   Status bar           - Color-coded feedback label
 %   Run button           - Triggers the full analysis pipeline
 %   Menu > File          - Load data, export Excel, save .mat, save timestamps
-%   Menu > Tools         - Launch BehaviorSync (Video/Neural Synchronization GUI)
+%   Menu > Tools         - Launch BehaviorSync - Standalone function (Video/Neural Vizualization and analysis GUI)
 
 % WORKFLOW
 %   1. Load one or more raw data files via File menu or Run button.
