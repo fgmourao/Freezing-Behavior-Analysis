@@ -10,7 +10,7 @@ This pipeline processes raw movement signals recorded during fear conditioning o
 
 The pipeline runs either interactively through a GUI (`App_Behavior`) or programmatically through a batch wrapper (`Batch_Behavior_Analyse`), making it suitable for both exploratory use and automated processing of large datasets.
 
-`BehaviorSync` is a companion standalone GUI for video-synchronized event annotation. It can be launched independently or from within `App_Behavior`.
+`BehaviorSync` is a companion standalone GUI for video-synchronized event annotation. It can be launched from within `App_Behavior` main menu or independently.
 
 ---
 
@@ -235,7 +235,7 @@ Block labels follow the format `<Prefix> <first>-<last>` (e.g., `CS 1-5`, `CS 6-
 
 ## BehaviorSync
 
-BehaviorSync is a **standalone** companion GUI for synchronized visualization and annotation of behavioral events directly from video, alongside simultaneously recorded neural or behavioral signals (e.g., LFP, EMG, load cell output).
+BehaviorSync is a **standalone** companion GUI for synchronized visualization and annotation of behavioral events directly from video, alongside simultaneously recorded neural or behavioral signals (e.g., LFP, Fibe Photometry, load cell, Videofreeze (MEDPC box) output).
 
 It can be launched independently from the command line or from within `App_Behavior` via **Tools > Open BehaviorSync**:
 
@@ -251,7 +251,7 @@ BehaviorSync()
 - Frame-by-frame navigation via arrow keys or the timeline slider.
 
 **Signal visualization**
-- Load neural and behavioral recordings independently (`.csv` or `.txt`; the last column is used as the signal, making the function robust to non-numeric leading columns).
+- Load neural and behavioral recordings independently (`.csv` or `.txt`). The last column is used as the signal; if two columns are present, the first is treated as the time    series (not used). Only one experimental subject per file is supported.
 - Time vectors are built automatically from sample count and user-supplied Fs — input files do **not** require a time column.
 - Scrolling time-window view on both signal axes, synchronized with video playback.
 - Adjustable time window width and independent Y-axis scaling for each signal.
