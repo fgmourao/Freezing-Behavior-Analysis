@@ -10,7 +10,7 @@ This pipeline processes raw movement signals recorded during fear conditioning o
 
 The pipeline runs either interactively through a GUI (`App_Behavior`) or programmatically through a batch wrapper (`Batch_Behavior_Analyse`), making it suitable for both exploratory use and automated processing of large datasets.
 
-`BehaviorSync` is a companion standalone GUI for video-synchronized event annotation. It can be launched independently or from within `App_Behavior`.
+`BehaviorSync` is a companion standalone GUI for video-synchronized event annotation. It can be launched from within `App_Behavior` main menu or independently.
 
 ---
 
